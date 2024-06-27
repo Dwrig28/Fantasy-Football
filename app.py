@@ -3,24 +3,29 @@ import requests
 from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
+import pandas as pd
 
 app = Dash(__name__)
+
+players=pd.read_csv('roster_2024.csv')
+players['name/team/pos']=players['full_name'] +' ' + players['team'] + ' ' + players['position']
 
 # Function to retrieve image URL from website based on player name
 def get_image_url(player_name):
     # Example URL where player images are stored
-    base_url = "https://www.nfl.com/players/"
-    url = base_url + player_name.lower().replace(" ", "-")
+    # base_url = "https://www.nfl.com/players/"
+    # url = base_url + player_name.lower().replace(" ", "-")
     
-    # Fetch HTML data from the URL
-    response = requests.get(url)
-    htmldata = response.text
+    # # Fetch HTML data from the URL
+    # response = requests.get(url)
+    # htmldata = response.text
     
-    # Parse HTML using BeautifulSoup
-    soup = BeautifulSoup(htmldata, 'html.parser')
+    # # Parse HTML using BeautifulSoup
+    # soup = BeautifulSoup(htmldata, 'html.parser')
     
-    # Find the meta tag with property="og:image" to get image URL
-    image_url = soup.find("meta", property="og:image")['content']
+    # # Find the meta tag with property="og:image" to get image URL
+    # image_url = soup.find("meta", property="og:image")['content']
+    image_url=players[players['name/team/pos']==player_name]['headshot_url'].unique()[0]
     
     return image_url
 
@@ -28,8 +33,10 @@ def get_image_url(player_name):
 app.layout = html.Div([
     html.H1(children='Fantasy Football Scoring App', style={'textAlign': 'center'}),
     html.H2('Enter a player\'s name below'),
-    dcc.Input(id='player_name_in', type='text', value=''),
+    dcc.Dropdown(id='player-dropdown', options=players['name/team/pos'], multi=False, placeholder='Select a player'),
+
     html.Button('Search', id='search_button', n_clicks=0),
+
     html.Div(id='player_name_out'),
     html.Div(id='image-container')  # Container for displaying the image dynamically
 ])
@@ -39,7 +46,7 @@ app.layout = html.Div([
     [Output('player_name_out', 'children'),
      Output('image-container', 'children')],
     [Input('search_button', 'n_clicks')],
-    [State('player_name_in', 'value')]
+    [State('player-dropdown', 'value')]
 )
 def update_output(n_clicks, player_name):
     if n_clicks == 0:
