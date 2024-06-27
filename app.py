@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 
 app = Dash(__name__)
-
+# test
 # Function to retrieve image URL from website based on player name
 def get_image_url(player_name):
     # Example URL where player images are stored
