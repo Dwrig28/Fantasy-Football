@@ -70,7 +70,7 @@ def update_output(n_clicks, player_name):
                 image = Image.open(BytesIO(image_content))
                 
                 # Return player name and image as HTML elements
-                return f"You entered: {player_name}", html.Img(src=image_url, style={'width': '300px', 'height': '300px'})
+                return f"You entered: {player_name}", html.Img(src=image_url, style={'width': '325px', 'height': '232px'})
             
             else:
                 return f"Failed to retrieve the image for {player_name}. Status code: {response.status_code}", html.Div()
