@@ -1,2 +1,2 @@
 dash
-BeautifulSoup
+bs4
