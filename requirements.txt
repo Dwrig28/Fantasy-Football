@@ -2,4 +2,3 @@ dash
 bs4
 pillow
 pandas
-os
