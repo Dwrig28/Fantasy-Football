@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
 import pandas as pd
+import os
 
 app = Dash(__name__)
 
