@@ -79,4 +79,5 @@ def update_output(n_clicks, player_name):
             return f"An error occurred: {str(e)}", html.Div()
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    port = int(os.environ.get('PORT', 8050))
+    app.run_server(host='0.0.0.0', port=port)
