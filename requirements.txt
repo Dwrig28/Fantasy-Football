@@ -2,3 +2,4 @@ dash
 bs4
 pillow
 pandas
+dash_bootstrap_components
