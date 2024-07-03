@@ -38,35 +38,65 @@ def get_image_url(player_name):
 app.layout = html.Div([
     html.H1(children='Fantasy Football Scoring App', style={'textAlign': 'center'}),
     html.H2(children='Enter your custom scoring settings below.', style={'textAlign': 'left'}),
-    html.Div('Passing',style={'textAlign': 'left',"text-decoration": "underline"}),
-dbc.Row(
-    [
+    dbc.Row(
+        [
         dbc.Col(
-            [
-                html.Div("Passing TDs", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
-                dcc.Input(id="pass_tds", type="text", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+            [   
+                dbc.Row(
+                    html.Div('Passing',style={'textAlign': 'left',"text-decoration": "underline"})
+                        ),
+                dbc.Row(
+                    [
+                        html.Div("Passing TD pts", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="pass_tds", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
+                dbc.Row(
+                    [
+                        html.Div("Passing YDs (per 1 yard)", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="pass_yds", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
+                dbc.Row(
+                    [
+                        html.Div("Interceptions", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="ints", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
             ],
-            width=4,
-            className="p-0"  # Adjust horizontal padding to reduce space between columns
         ),
         dbc.Col(
             [
-                html.Div("Passing YDs", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
-                dcc.Input(id="pass_yds", type="text", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                dbc.Row(
+                    html.Div('Rushing',style={'textAlign': 'left',"text-decoration": "underline"})
+                        ),
+                dbc.Row(
+                    [
+                        html.Div("Rushing TD pts", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="pass_tds", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
+                dbc.Row(
+                    [
+                        html.Div("Rushing YDs (per 1 yard)", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="pass_yds", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
+                dbc.Row(
+                    [
+                        html.Div("Interceptions", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
+                        dcc.Input(id="ints", type="number", placeholder="", style={'width': '100px', 'display': 'inline-block'})
+                    ],
+                    className="p-0"  # Adjust horizontal padding to reduce space between columns
+                ),
             ],
-            width=4,
-            className="p-0"  # Adjust horizontal padding to reduce space between columns
         ),
-        dbc.Col(
-            [
-                html.Div("Interceptions", style={'marginRight': '10px', 'display': 'inline-block', 'width': '120px'}),
-                dcc.Input(id="ints", type="text", placeholder="", style={'width': '100px', 'display': 'inline-block'})
-            ],
-            width=4,
-            className="p-0"  # Adjust horizontal padding to reduce space between columns
-        ),
-    ],
-),
+    ]),
 
 
 
