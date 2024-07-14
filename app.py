@@ -1,8 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, State, dash_table
 import dash_bootstrap_components as dbc
 import requests
-from io import BytesIO
-from PIL import Image
 import pandas as pd
 import os
 import nfl_data_py as nfl
@@ -15,11 +13,10 @@ players = nfl.import_players()
 players = players[(players['status']=='ACT') & players['position'].isin(['QB','RB','WR','TE'])]
 players['name/team/pos'] = players['display_name'] + ' ' + players['team_abbr'] + ' ' + players['position']
 
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
+df=pd.DataFrame(columns=['season','passing_yards', 'rushing_yards', 'receiving_yards', 'passing_tds', 'rushing_tds', 'receiving_tds','interceptions','fumbles_lost'])
+
+seasonal_data=nfl.import_seasonal_data([2018,2019,2020,2021,2022,2023],'REG')
+seasonal_data['fumbles_lost']=seasonal_data['sack_fumbles_lost'] + seasonal_data['rushing_fumbles_lost'] +seasonal_data['receiving_fumbles_lost']
 
 # App layout
 app.layout = html.Div([
@@ -70,6 +67,13 @@ app.layout = html.Div([
                         ],
                         className="mb-3"
                     ),
+                    dbc.Row(
+                        [
+                            dbc.Col(html.Div("Fumbles Lost", style={'white-space': 'nowrap'}), width=6),
+                            dbc.Col(dcc.Input(id="fumbles", type="number", placeholder=0, style={'width': '100%'}), width=2)
+                        ],
+                        className="mb-3"
+                    ),
                 ]
             ),
             dbc.Col(
@@ -109,48 +113,51 @@ app.layout = html.Div([
     ),
     html.Button('Search', id='search_button', n_clicks=0),
     html.Div(id='player_name_out'),
-    dbc.Container([
-        dbc.Row([
-            dbc.Col(html.Div(id='image-container', style={'textAlign': 'center'}), width=4),
-            dbc.Col(
-                dash_table.DataTable(
-                    df.to_dict('records'),
-                    [{"name": i, "id": i} for i in df.columns],
-                    id='tbl',
-                    style_table={'overflowX': 'auto'},
-                    style_cell={'textAlign': 'left'}
-                ),
-                width=8
-            )
-        ])
-    ], fluid=True)
+    html.Div(id='result-container', children=[
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(html.Div(id='image-container', style={'textAlign': 'center'}), width=4),
+                dbc.Col(
+                    dash_table.DataTable(
+                        df.to_dict('records'),
+                        [{"name": i, "id": i} for i in df.columns],
+                        id='classic_stats',
+                        style_table={'overflowX': 'auto'},
+                        style_cell={'textAlign': 'left'}
+                    ),
+                    width=8
+                )
+            ])
+        ], fluid=True)
+    ], style={'display': 'none'})
 ], style={'padding': '20px'})
 
 # Callback to update player name output and display image
 @app.callback(
-    [Output('player_name_out', 'children'),
-     Output('image-container', 'children')],
+    [Output('classic_stats', 'data'),
+     Output('player_name_out', 'children'),
+     Output('image-container', 'children'),
+     Output('result-container', 'style')],
     [Input('search_button', 'n_clicks')],
     [State('player-dropdown', 'value')]
 )
 def update_output(n_clicks, player_name):
     if n_clicks == 0:
-        return "", html.Div()  # Return empty div for image container if button hasn't been clicked
+        return [], "", html.Div(), {'display': 'none'}  # Return empty data, empty name, and hide result container if button hasn't been clicked
     if not player_name:
-        return "No Player Selected", html.Div()  # Return empty div for image container if no player name
+        return [], "No Player Selected", html.Div(), {'display': 'none'}  # Return empty data, empty name, and hide result container if no player name
     else:
-        image_url=players[players['name/team/pos']==player_name]['headshot'].unique()[0]
+        player_gsis_id = players[players['name/team/pos'] == player_name]['gsis_id'].unique()[0]
+        df = seasonal_data[seasonal_data['player_id'] == player_gsis_id]
+        image_url = players[players['name/team/pos'] == player_name]['headshot'].unique()[0]
         if image_url:
             response = requests.get(image_url)
             if response.status_code == 200:
-                image_content = response.content
-                image = Image.open(BytesIO(image_content))
-                return f"You entered: {player_name}", html.Img(src=image_url, style={'width': '325px', 'height': '232px'})
+                return df.to_dict('records'), f"You entered: {player_name}", html.Img(src=image_url, style={'width': '325px', 'height': '232px'}), {'display': 'block'}
             else:
-                return f"Failed to retrieve the image for {player_name}. Status code: {response.status_code}", html.Div()
-
+                return df.to_dict('records'), f"Failed to retrieve the image for {player_name}. Status code: {response.status_code}", html.Div(), {'display': 'block'}
         else:
-            return f"{player_name} does not have a headshot.", html.Div()
+            return df.to_dict('records'), f"{player_name} does not have a headshot.", html.Div(), {'display': 'block'}
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8050))
