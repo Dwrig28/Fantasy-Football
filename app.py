@@ -42,7 +42,7 @@ df = pd.DataFrame(columns=['Season', 'Passing Yds', 'Passing TDs', 'INTs', 'Rush
 # App layout
 app.layout = html.Div([
     html.H1(children='Fantasy Football Scoring App', style={'textAlign': 'center'}),
-    html.H2(children='Enter your custom scoring settings below.', style={'textAlign': 'left'}),
+    html.H2(children='Enter your custom scoring settings below.', style={'textAlign': 'left', 'marginBottom': '20px'}),
     dbc.Row(
         [
             dbc.Col(
@@ -57,21 +57,21 @@ app.layout = html.Div([
                                             dbc.Col(html.Div("Passing TD pts", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="pass_tds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Passing YDs (per 1 yard)", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="pass_yds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Interceptions", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="ints", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                 ]
                             ),
@@ -91,21 +91,21 @@ app.layout = html.Div([
                                             dbc.Col(html.Div("Rushing TD pts", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="rush_tds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Rushing YDs (per 1 yard)", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="rush_yds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Fumbles Lost", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="fumbles", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                 ]
                             ),
@@ -125,21 +125,21 @@ app.layout = html.Div([
                                             dbc.Col(html.Div("Receiving TD pts", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="rec_tds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Receiving YDs (per 1 yard)", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="rec_yds", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                     dbc.Row(
                                         [
                                             dbc.Col(html.Div("Receptions (ppr)", style={'white-space': 'nowrap'}), width=6),
                                             dbc.Col(dcc.Input(id="recs", type="number", placeholder=0, style={'width': '100%'}), width=2)
                                         ],
-                                        className="mb-3"
+                                        className="mb-4"  # Adjusted margin-bottom
                                     ),
                                 ]
                             ),
@@ -149,12 +149,13 @@ app.layout = html.Div([
             ),
         ]
     ),
-    html.H2('Enter a player\'s name below'),
+    html.H2('Enter a player\'s name below', style={'marginTop': '20px', 'marginBottom': '10px'}),  # Adjusted margin-top and margin-bottom
     dcc.Dropdown(
         id='player-dropdown', 
         options=[{'label': name, 'value': name} for name in players['name/team/pos']], 
         multi=False, 
-        placeholder='Select a player'
+        placeholder='Select a player',
+        style={'width': '50%'}  # Adjusted width
     ),
     html.Button('Search', id='search_button', n_clicks=0),
     html.Div(id='player_name_out'),

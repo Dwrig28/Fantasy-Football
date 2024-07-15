@@ -5,4 +5,3 @@ pandas
 dash_bootstrap_components
 nfl_data_py
 numpy==1.26.4
-warnings
